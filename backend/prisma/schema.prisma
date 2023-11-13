@@ -10,8 +10,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Metric {
-  timestamp DateTime @id
+model Metrics {
+  id Int @id @default(autoincrement())
+  timestamp String
   name  String
-  value String
+  value Float
 }

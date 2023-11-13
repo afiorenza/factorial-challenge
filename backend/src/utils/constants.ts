@@ -1,0 +1,4 @@
+export const ERRORS = {
+  UNHANDLED: 'UNHANDLED',
+  VALIDATION: 'VALIDATION'
+};
