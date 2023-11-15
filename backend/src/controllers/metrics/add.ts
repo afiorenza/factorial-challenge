@@ -1,11 +1,14 @@
 import { ERRORS } from '@/utils/constants';
-import { format, formatISO } from 'date-fns';
+import { format } from 'date-fns';
 import { InferType, number, object, string, ValidationError } from 'yup';
 import { parseValidationErrors } from '@/utils/validation';
 import { Request, Response } from 'express';
 import database from '@/database/index';
 
+const dateRegexp = new RegExp(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/);
+
 const metricSchema = object({
+  timestamp: string().matches(dateRegexp).default(() => format(new Date(), 'yyyy-MM-dd HH:mm:ss')),
   name: string().required(),
   value: number().required()
 });
@@ -27,7 +30,7 @@ export default async (req: Request, res: Response): Promise<Response> => {
   try {
     const newMetric = await database.metrics.create({
       data: {
-        timestamp: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+        timestamp: metric.timestamp,
         name: metric.name,
         value: metric.value,
       }

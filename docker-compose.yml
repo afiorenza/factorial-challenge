@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  backend:
+    platform: linux/amd64
+    image: agustinfiorenza/factorial-challenge-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    env_file:
+      - ./backend/.env
+
+  frontend:
+    platform: linux/amd64
+    image: agustinfiorenza/factorial-challenge-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    env_file:
+      - ./frontend/.env
