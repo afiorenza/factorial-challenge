@@ -1,5 +1,5 @@
-import { Button, Card, Input, Option, Select, Typography } from '@material-tailwind/react';
-import { format } from 'date-fns';
+import { Button, Card, Input, Option, Select } from '@material-tailwind/react';
+import { formatDate } from '@/utils/format';
 import { useAppSelector } from '@/store/hooks';
 import { useForm } from 'react-hook-form';
 import React, { useState } from 'react';
@@ -34,14 +34,17 @@ const AddMetricForm: React.FC<IAddMetricForm> = ({ adding, onSubmit }) => {
   const { handleSubmit: handleSubmit, register, reset, setValue } = useForm<Metric>({
     defaultValues: { 
       name: '',
-      timestamp: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+      timestamp: formatDate(new Date()),
       value: ''
     }
   });
   const [errors, setErrors] = useState<IErrors>({});
 
   const handleValidSubmit = (formData: Metric) => {
-    onSubmit(formData);
+    onSubmit({
+      ...formData,
+      timestamp: formatDate(formData.timestamp as string)
+    });
     reset();
   }
 
@@ -87,23 +90,16 @@ const AddMetricForm: React.FC<IAddMetricForm> = ({ adding, onSubmit }) => {
           <Input
             { 
               ...register(MetricAttributes.timestamp, {
-                pattern: new RegExp(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/), 
-                required: true 
+                required: true,
               }) 
             } 
             crossOrigin={ undefined }
             error={!!errors[MetricAttributes.timestamp]}
             label='Date'
             required
+            step={ 1 }
+            type='datetime-local'
           />
-
-          <Typography
-            className='ml-2 mt-1 flex items-center font-normal'
-            color='gray'
-            variant='small'
-          >
-            Date format should be YYYY-MM-DD HH:MM:SS.
-          </Typography>
         </div>
 
         <div className='mb-4'>
