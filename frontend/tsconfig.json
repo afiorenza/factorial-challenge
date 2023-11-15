@@ -11,7 +11,7 @@
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedParameters": false,
     "paths": {
       "@/*": ["./*"]
     },
@@ -19,7 +19,7 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "ES2020",
-    "types": ["@types/jest", "node"],
+    "types": ["@types/jest", "node",  "vite/client"],
     "useDefineForClassFields": true
   },
   "include": ["src"],

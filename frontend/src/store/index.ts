@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import metricsReducer from '@/store/reducers/metrics';
+import typesReducer from '@/store/reducers/types';
 
 const store = configureStore({
   reducer: {
-    metrics: metricsReducer
+    metrics: metricsReducer,
+    types: typesReducer
   }
 });
 
