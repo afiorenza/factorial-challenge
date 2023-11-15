@@ -1,15 +1,17 @@
 import { ERRORS } from '@/utils/constants';
 import { format } from 'date-fns';
 import { InferType, number, object, string, ValidationError } from 'yup';
+import { METRIC_TYPES } from '@/utils/constants';
 import { parseValidationErrors } from '@/utils/validation';
 import { Request, Response } from 'express';
 import database from '@/database/index';
 
 const dateRegexp = new RegExp(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/);
+const metricTypes = Object.values(METRIC_TYPES);
 
 const metricSchema = object({
   timestamp: string().matches(dateRegexp).default(() => format(new Date(), 'yyyy-MM-dd HH:mm:ss')),
-  name: string().required(),
+  name: string().required().oneOf(metricTypes),
   value: number().required()
 });
 
