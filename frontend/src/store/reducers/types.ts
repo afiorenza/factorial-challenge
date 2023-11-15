@@ -2,6 +2,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import service from '@/services';
 
+import type { RootState } from '@/store';
+
 export interface TypeState {
   error: string
   loading: boolean
@@ -53,5 +55,7 @@ export const TypesSlice = createSlice({
     });
   }
 })
+
+export const selectTypes = (state: RootState) => state.types.types;
 
 export default TypesSlice.reducer;

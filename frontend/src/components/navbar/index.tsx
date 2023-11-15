@@ -4,10 +4,10 @@ import React from 'react';
  
  const Navbar: React.FC = () => {
   return (
-    <MtNavbar className='' fullWidth>
+    <MtNavbar fullWidth>
       <div className='container mx-auto flex items-center justify-between text-black'>
         <Typography className='font-bold'>
-          Factorial challenge
+          Metrics challenge
         </Typography> 
 
         <div>

@@ -5,7 +5,7 @@ import service from '@/services';
 export interface Metric { 
   id?: number
   name:  string
-  timestamp?: string
+  timestamp: string
   value: string
 }
 

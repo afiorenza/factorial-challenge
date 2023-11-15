@@ -1,4 +1,4 @@
-# factorial-challenge
+# Challenge
 TODO
 
 ## Instructions

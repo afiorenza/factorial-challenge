@@ -1,11 +1,12 @@
-import { Button, Card, Input, Option, Select } from '@material-tailwind/react';
+import { Button, Card, Input } from '@material-tailwind/react';
 import { formatDate } from '@/utils/format';
 import { useAppSelector } from '@/store/hooks';
 import { useForm } from 'react-hook-form';
-import React, { useState } from 'react';
+import Datepicker from '@/components/datepicker';
+import MetricsSelector from '@/components/metrics-selector';
+import React, { useEffect, useState } from 'react';
 
 import type { Metric } from '@/store/reducers/metrics';
-import type { onChange } from '@material-tailwind/react/types/components/select';
 
 enum MetricAttributes {
   name = 'name',
@@ -30,8 +31,17 @@ interface IAddMetricForm {
 }
 
 const AddMetricForm: React.FC<IAddMetricForm> = ({ adding, onSubmit }) => {
+  const loadingTypes = useAppSelector(state => state.types.loading);
   const metricTypes = useAppSelector(state => state.types.types);
-  const { handleSubmit: handleSubmit, register, reset, setValue } = useForm<Metric>({
+
+console.log( "loadingTypes ", loadingTypes);
+
+  useEffect(() => {
+    console.log("loadingTypes ", loadingTypes);
+    
+  }, [loadingTypes]);
+
+  const { control, handleSubmit, register, reset } = useForm<Metric>({
     defaultValues: { 
       name: '',
       timestamp: formatDate(new Date()),
@@ -43,7 +53,7 @@ const AddMetricForm: React.FC<IAddMetricForm> = ({ adding, onSubmit }) => {
   const handleValidSubmit = (formData: Metric) => {
     onSubmit({
       ...formData,
-      timestamp: formatDate(formData.timestamp as string)
+      timestamp: formatDate(new Date(formData.timestamp))
     });
     reset();
   }
@@ -52,34 +62,6 @@ const AddMetricForm: React.FC<IAddMetricForm> = ({ adding, onSubmit }) => {
     setErrors(errors);  
   }
 
-  const renderMetricOption = (option: string) => {
-    return (
-      <Option 
-        key={ option } 
-        value={ option }
-      >
-        { option }
-      </Option>
-    );
-  };
-
-  const renderNameSelect = () => {
-    const props = register(MetricAttributes.name, { 
-      required: true 
-    });
-    const handleChange: onChange = (value) => setValue(props.name, value as string);
-
-    return (
-      <Select 
-        { ...props }
-        label='Metric type'
-        onChange={ handleChange }
-      >
-        { metricTypes.map(renderMetricOption) }
-      </Select>
-    );
-  } 
-
   return (
     <Card>
       <form 
@@ -87,34 +69,28 @@ const AddMetricForm: React.FC<IAddMetricForm> = ({ adding, onSubmit }) => {
         onSubmit={ handleSubmit(handleValidSubmit, handleInvalidSubmit) }
       >
         <div className='mb-2'>
-          <Input
-            { 
-              ...register(MetricAttributes.timestamp, {
-                required: true,
-              }) 
-            } 
-            crossOrigin={ undefined }
-            error={!!errors[MetricAttributes.timestamp]}
+          <Datepicker 
+            formProps={ register(MetricAttributes.timestamp, { required: true }) }
+            error={ !!errors[MetricAttributes.timestamp] }
             label='Date'
             required
-            step={ 1 }
-            type='datetime-local'
           />
         </div>
 
         <div className='mb-4'>
-          { renderNameSelect() }
+          <MetricsSelector 
+            control={ control }
+            label='Metric type' 
+            name={ MetricAttributes.name }
+            options={ metricTypes }
+          />
         </div>
         
         <div className='mb-4'>
           <Input
-            { 
-              ...register(MetricAttributes.value, { 
-                required: true 
-              }) 
-            } 
+            { ...register(MetricAttributes.value, { required: true }) } 
             crossOrigin={ undefined }
-            error={!!errors[MetricAttributes.value]}
+            error={ !!errors[MetricAttributes.value] }
             label='Value'
             step={ 0.01 }
             type='number'
