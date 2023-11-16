@@ -1,21 +1,22 @@
 import { Control, Controller } from 'react-hook-form';
 import { isEmpty } from 'lodash';
 import { Option, Select } from '@material-tailwind/react';
-
+import { useAppSelector } from '@/store/hooks';
 import React from 'react';
 
-import type { ControllerRenderProps } from 'react-hook-form';
+import type { ControllerFieldState, ControllerRenderProps } from 'react-hook-form';
 
-type MetricsSelectorProps = {
+interface IMetricsSelectorProps {
   [x: string]: any
   control: Control<any>
   label: string
   name: string
-  options: string[]
+  required?: boolean
 }
 
-const MetricsSelector: React.FC<MetricsSelectorProps> = ({ control, label, name, options = [] }) => {
-  
+const MetricsSelector: React.FC<IMetricsSelectorProps> = ({ control, label, name, required }) => {
+  const metricTypes = useAppSelector(state => state.types.types);
+
   const renderMetricOption = (option: string) => {
     return (
       <Option 
@@ -35,29 +36,30 @@ const MetricsSelector: React.FC<MetricsSelectorProps> = ({ control, label, name,
       }
     });
   }
-
-  console.log("options ", options);
   
 
-  const renderSelect = ({ field: { onChange, value, ref } }: { field: ControllerRenderProps }) => {
+  const renderSelect = ({ field: { onChange, value, ref }, fieldState: { error } }: { field: ControllerRenderProps, fieldState: ControllerFieldState  }) => {
     return (
       <Select
-        disabled={ isEmpty(options) }
+        error={ !isEmpty(error) }
         label={ label }
         onChange={ value => handleChange(onChange, value as string) }
         ref={ ref }
         value={ value }
       >
-        { options.map(renderMetricOption) }
+        { metricTypes.map(renderMetricOption) }
       </Select>
     );
   }
+
+  if (isEmpty(metricTypes)) return null;
 
   return (
     <Controller
       control={ control }
       name={ name }
       render={ renderSelect }
+      rules={ { required } }
     />
   );
 }

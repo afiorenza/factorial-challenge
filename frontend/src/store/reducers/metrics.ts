@@ -2,6 +2,26 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import service from '@/services';
 
+import type { RootState } from '@/store';
+
+export enum MetricAttributes {
+  name = 'name',
+  timestamp = 'timestamp',
+  value = 'value'
+}
+
+export enum FilterAttributes {
+  from = 'from',
+  name = 'name',
+  to = 'to'
+}
+
+export interface IFilter {
+  [FilterAttributes.from]: string
+  [FilterAttributes.name]: string
+  [FilterAttributes.to]: string
+}
+
 export interface Metric { 
   id?: number
   name:  string
@@ -50,10 +70,10 @@ export const addMetric = createAsyncThunk<undefined, Metric, { rejectValue: stri
 })
 
 export const fetchMetrics = createAsyncThunk
-  <{ metrics: Metric[], stats: Stats  }, undefined, { rejectValue: string }>
+  <{ metrics: Metric[], stats: Stats  }, IFilter, { rejectValue: string }>
   ('metrics/fetch', async (payload, { rejectWithValue }) => {
   try {
-    const response = await service.get('/metrics');
+    const response = await service.get('/metrics', { params: payload });
 
     return {
       metrics: response.data.data.metrics,
@@ -107,5 +127,10 @@ export const MetricsSlice = createSlice({
     });
   }
 })
+
+export const selectAddingMetrics = (state: RootState) => state.metrics.adding;
+export const selectLoadingMetrics = (state: RootState) => state.metrics.loading;
+export const selectMetrics = (state: RootState) => state.metrics.metrics;
+export const selectStats = (state: RootState) => state.metrics.stats;
 
 export default MetricsSlice.reducer;

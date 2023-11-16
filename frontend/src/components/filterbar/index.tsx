@@ -1,17 +1,15 @@
+import { fetchMetrics, FilterAttributes, selectLoadingMetrics } from '@/store/reducers/metrics';
 import { Button, Card, CardBody } from '@material-tailwind/react';
 import { formatDate } from '@/utils/format';
+import { isEmpty } from 'lodash';
 import { subDays } from 'date-fns';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { useForm } from 'react-hook-form';
 import Datepicker from '@/components/datepicker';
 import MetricsSelector from '@/components/metrics-selector';
-import React, { useEffect, useState } from 'react';
-import { useAppSelector } from '@/store/hooks';
+import React, { useState } from 'react';
 
-enum IFilterAttributes {
-  from = 'from',
-  name = 'name',
-  to = 'to'
-}
+import type { IFilter } from '@/store/reducers/metrics';
 
 interface Error {
   type: string
@@ -19,28 +17,14 @@ interface Error {
 }
 
 interface IErrors {
-  [IFilterAttributes.from]?: Error
-  [IFilterAttributes.name]?: Error
-  [IFilterAttributes.to]?: Error
-}
-
-interface IFilter {
-  [IFilterAttributes.from]: string
-  [IFilterAttributes.name]: string
-  [IFilterAttributes.to]: string
+  [FilterAttributes.from]?: Error
+  [FilterAttributes.name]?: Error
+  [FilterAttributes.to]?: Error
 }
 
 const Filterbar: React.FC = () => {
-  const loadingTypes = useAppSelector(state => state.types.loading);
-  const metricTypes = useAppSelector(state => state.types.types);
-
-console.log( "loadingTypes ", loadingTypes);
-
-  useEffect(() => {
-    console.log("loadingTypes ", loadingTypes);
-    
-  }, [loadingTypes]);
-
+  const dispatch = useAppDispatch();
+  const isLoadingMetrics = useAppSelector(selectLoadingMetrics);
   const { control, handleSubmit, register } = useForm<IFilter>({
     defaultValues: { 
       name: '',
@@ -51,11 +35,7 @@ console.log( "loadingTypes ", loadingTypes);
   const [errors, setErrors] = useState<IErrors>({});
 
   const handleValidSubmit = (formData: IFilter) => {
-    // onSubmit({
-    //   ...formData,
-    //   timestamp: formatDate(formData.timestamp as string)
-    // });
-    // reset();
+    dispatch(fetchMetrics(formData));
   }
 
   const handleInvalidSubmit = (errors: any) => {
@@ -69,38 +49,39 @@ console.log( "loadingTypes ", loadingTypes);
           onSubmit={ handleSubmit(handleValidSubmit, handleInvalidSubmit) }
         >
           <div className='flex flex-col lg:flex-row lg:justify-between lg:space-x-4'>
-            <div className='mb-4 lg:w-1/4'>
+            <div className='mb-4 lg:w-1/4 lg:mb-0'>
               <MetricsSelector
                 control={ control }
                 label='Metric type' 
-                name={ IFilterAttributes.name }
-                options={ metricTypes }
+                name={ FilterAttributes.name }
+                required
               />
             </div>
             
-            <div className='mb-4 lg:w-1/4'>
+            <div className='mb-4 lg:w-1/4 lg:mb-0'>
               <Datepicker
-                formProps={ register(IFilterAttributes.from, { required: true }) }
-                error={ !!errors[IFilterAttributes.from] }
+                formProps={ register(FilterAttributes.from, { required: true }) }
+                error={ !isEmpty(errors[FilterAttributes.from]) }
                 label='From'
                 required
               />
             </div>
 
-            <div className='mb-4 lg:w-1/4'>
+            <div className='mb-4 lg:w-1/4 lg:mb-0'>
               <Datepicker
-                formProps={ register(IFilterAttributes.to, { required: true }) }
-                error={ !!errors[IFilterAttributes.to] }
+                formProps={ register(FilterAttributes.to, { required: true }) }
+                error={ !isEmpty(errors[FilterAttributes.to]) }
                 label='To'
                 required
               />
             </div>
 
-            <div className=''> 
-              <Button>
-                Filter
-              </Button>
-            </div>
+            <Button 
+              disabled={ isLoadingMetrics }
+              type='submit'
+            >
+              Filter
+            </Button>
           </div>
         </form>
       </CardBody>

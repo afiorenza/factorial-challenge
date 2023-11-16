@@ -1,18 +1,12 @@
 import { Button, Card, Input } from '@material-tailwind/react';
 import { formatDate } from '@/utils/format';
-import { useAppSelector } from '@/store/hooks';
+import { isEmpty } from 'lodash';
 import { useForm } from 'react-hook-form';
 import Datepicker from '@/components/datepicker';
 import MetricsSelector from '@/components/metrics-selector';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
-import type { Metric } from '@/store/reducers/metrics';
-
-enum MetricAttributes {
-  name = 'name',
-  timestamp = 'timestamp',
-  value = 'value'
-}
+import type { Metric, MetricAttributes } from '@/store/reducers/metrics';
 
 interface Error {
   type: string
@@ -31,16 +25,6 @@ interface IAddMetricForm {
 }
 
 const AddMetricForm: React.FC<IAddMetricForm> = ({ adding, onSubmit }) => {
-  const loadingTypes = useAppSelector(state => state.types.loading);
-  const metricTypes = useAppSelector(state => state.types.types);
-
-console.log( "loadingTypes ", loadingTypes);
-
-  useEffect(() => {
-    console.log("loadingTypes ", loadingTypes);
-    
-  }, [loadingTypes]);
-
   const { control, handleSubmit, register, reset } = useForm<Metric>({
     defaultValues: { 
       name: '',
@@ -82,7 +66,7 @@ console.log( "loadingTypes ", loadingTypes);
             control={ control }
             label='Metric type' 
             name={ MetricAttributes.name }
-            options={ metricTypes }
+            required
           />
         </div>
         
@@ -90,7 +74,7 @@ console.log( "loadingTypes ", loadingTypes);
           <Input
             { ...register(MetricAttributes.value, { required: true }) } 
             crossOrigin={ undefined }
-            error={ !!errors[MetricAttributes.value] }
+            error={ !isEmpty(errors[MetricAttributes.value]) }
             label='Value'
             step={ 0.01 }
             type='number'
