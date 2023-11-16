@@ -1,17 +1,13 @@
-import { ERRORS } from '@/utils/constants';
+import { ERRORS, TIMESTAMP_FORMAT } from '@/utils/constants';
 import { format } from 'date-fns';
-import { InferType, number, object, string, ValidationError } from 'yup';
-import { METRIC_TYPES } from '@/utils/constants';
-import { parseValidationErrors } from '@/utils/validation';
+import { InferType, number, object, ValidationError } from 'yup';
+import { nameValidation, parseValidationErrors, timestampValidation } from '@/utils/validation';
 import { Request, Response } from 'express';
 import database from '@/database/index';
 
-const dateRegexp = new RegExp(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/);
-const metricTypes = Object.values(METRIC_TYPES);
-
 const metricSchema = object({
-  timestamp: string().matches(dateRegexp).default(() => format(new Date(), 'yyyy-MM-dd HH:mm:ss')),
-  name: string().required().oneOf(metricTypes),
+  timestamp: timestampValidation.default(() => format(new Date(), TIMESTAMP_FORMAT)),
+  name: nameValidation,
   value: number().required()
 });
 
@@ -34,7 +30,7 @@ export default async (req: Request, res: Response): Promise<Response> => {
       data: {
         timestamp: metric.timestamp,
         name: metric.name,
-        value: metric.value,
+        value: metric.value
       }
     });
 

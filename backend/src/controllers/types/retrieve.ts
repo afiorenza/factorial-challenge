@@ -4,9 +4,9 @@ import { Request, Response } from 'express';
 
 export default async (req: Request, res: Response): Promise<Response> => {
   try {
-    return res.json({ 
+    return res.json({
       data: Object.values(METRIC_TYPES)
-    });  
+    });
   } catch (error) {
     console.error(error);
 
