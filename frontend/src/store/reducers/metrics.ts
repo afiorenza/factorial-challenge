@@ -17,35 +17,35 @@ export enum FilterAttributes {
 }
 
 export interface IFilter {
-  [FilterAttributes.from]: string
-  [FilterAttributes.name]: string
-  [FilterAttributes.to]: string
+  [FilterAttributes.from]: string;
+  [FilterAttributes.name]: string;
+  [FilterAttributes.to]: string;
 }
 
 export interface Metric { 
-  id?: number
-  name:  string
-  timestamp: string
-  value: string
+  id?: number;
+  name:  string;
+  timestamp: string;
+  value: string;
 }
 
 export interface Average {
-  datetime: string
-  value: number
+  datetime: string;
+  value: number;
 }
 
 export interface Stats {
-  minutes: Average[]
-  hours: Average[]
-  days: Average[]
+  minutes: Average[];
+  hours: Average[];
+  days: Average[];
 }
 
 export interface MetricState {
-  adding: boolean
-  error: string
-  loading: boolean
-  metrics: Metric[] | []
-  stats: Stats | {}
+  adding: boolean;
+  error: string;
+  loading: boolean;
+  metrics: Metric[] | [];
+  stats: Stats | {};
 }
 
 const initialState: MetricState = {

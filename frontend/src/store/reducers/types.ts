@@ -5,9 +5,9 @@ import service from '@/services';
 import type { RootState } from '@/store';
 
 export interface TypeState {
-  error: string
-  loading: boolean
-  types: string[] | []
+  error: string;
+  loading: boolean;
+  types: string[] | [];
 }
 
 const initialState: TypeState = {

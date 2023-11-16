@@ -7,11 +7,11 @@ import React from 'react';
 import type { ControllerFieldState, ControllerRenderProps } from 'react-hook-form';
 
 interface IMetricsSelectorProps {
-  [x: string]: any
-  control: Control<any>
-  label: string
-  name: string
-  required?: boolean
+  [x: string]: any;
+  control: Control<any>;
+  label: string;
+  name: string;
+  required?: boolean;
 }
 
 const MetricsSelector: React.FC<IMetricsSelectorProps> = ({ control, label, name, required }) => {

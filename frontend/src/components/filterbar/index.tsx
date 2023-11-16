@@ -12,14 +12,14 @@ import React, { useState } from 'react';
 import type { IFilter } from '@/store/reducers/metrics';
 
 interface Error {
-  type: string
-  message: string
+  type: string;
+  message: string;
 }
 
 interface IErrors {
-  [FilterAttributes.from]?: Error
-  [FilterAttributes.name]?: Error
-  [FilterAttributes.to]?: Error
+  [FilterAttributes.from]?: Error;
+  [FilterAttributes.name]?: Error;
+  [FilterAttributes.to]?: Error;
 }
 
 const Filterbar: React.FC = () => {
@@ -39,7 +39,7 @@ const Filterbar: React.FC = () => {
   }
 
   const handleInvalidSubmit = (errors: any) => {
-    setErrors(errors);  
+    setErrors(errors as IErrors);  
   }
 
   return (

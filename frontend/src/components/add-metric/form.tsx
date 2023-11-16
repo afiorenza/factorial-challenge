@@ -1,27 +1,28 @@
 import { Button, Card, Input } from '@material-tailwind/react';
 import { formatDate } from '@/utils/format';
 import { isEmpty } from 'lodash';
+import { MetricAttributes } from '@/store/reducers/metrics';
 import { useForm } from 'react-hook-form';
 import Datepicker from '@/components/datepicker';
 import MetricsSelector from '@/components/metrics-selector';
 import React, { useState } from 'react';
 
-import type { Metric, MetricAttributes } from '@/store/reducers/metrics';
+import type { Metric } from '@/store/reducers/metrics';
 
 interface Error {
-  type: string
-  message: string
+  type: string;
+  message: string;
 }
 
 interface IErrors {
-  [MetricAttributes.name]?: Error
-  [MetricAttributes.timestamp]?: Error
-  [MetricAttributes.value]?: Error
+  [MetricAttributes.name]?: Error;
+  [MetricAttributes.timestamp]?: Error;
+  [MetricAttributes.value]?: Error;
 }
 
 interface IAddMetricForm {
-  adding: boolean
-  onSubmit: Function
+  adding: boolean;
+  onSubmit: Function;
 }
 
 const AddMetricForm: React.FC<IAddMetricForm> = ({ adding, onSubmit }) => {
@@ -43,7 +44,7 @@ const AddMetricForm: React.FC<IAddMetricForm> = ({ adding, onSubmit }) => {
   }
 
   const handleInvalidSubmit = (errors: any) => {
-    setErrors(errors);  
+    setErrors(errors as IErrors);  
   }
 
   return (
