@@ -1,8 +1,16 @@
 # Challenge backend
 
-## Prisma ORM
-  * Command to run the migrations: `npx prisma migrate dev --name init`
+## Requirements
 
+* NodeJS v20.7.0
+* Yarn
+* NPX
 
-NOTES:
-* Error in Prisma library to handle timestamp as a text instead as a unix epoch. (https://github.com/prisma/prisma/issues/3084)
+## How to run
+
+* cd into `/backend` folder
+* Create `.env` file with `cp .env.example .env`
+* Run `yarn` to install dependencies
+* Run `npx prisma migrate dev --name init` to create the SQLite database
+* Run `yarn dev`
+* The server will be running in [http://localhost:3000](http://localhost:3000)
