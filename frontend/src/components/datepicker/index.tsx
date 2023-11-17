@@ -2,18 +2,18 @@ import { Input } from '@material-tailwind/react';
 import React from 'react';
 
 interface IDatepickerProps {
-  [x: string]: any;
+  error?: boolean;
   formProps?: object;
   label?: string;
   required?: boolean;
 }
 
-const Datepicker: React.FC<IDatepickerProps> = ({ formProps, label, required, ...props }) => {
+const Datepicker: React.FC<IDatepickerProps> = ({ error, formProps, label, required }) => {
   return (
     <Input
-      { ...props }
       { ...formProps }
       crossOrigin={ undefined }
+      error={ error }
       label={ label }
       required={ required }
       step={ 1 }

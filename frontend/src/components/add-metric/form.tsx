@@ -30,7 +30,7 @@ const AddMetricForm: React.FC<IAddMetricForm> = ({ adding, onSubmit }) => {
     defaultValues: { 
       name: '',
       timestamp: formatDate(new Date()),
-      value: ''
+      value: undefined
     }
   });
   const [errors, setErrors] = useState<IErrors>({});
@@ -55,8 +55,8 @@ const AddMetricForm: React.FC<IAddMetricForm> = ({ adding, onSubmit }) => {
       >
         <div className='mb-2'>
           <Datepicker 
-            formProps={ register(MetricAttributes.timestamp, { required: true }) }
             error={ !!errors[MetricAttributes.timestamp] }
+            formProps={ register(MetricAttributes.timestamp, { required: true }) }
             label='Date'
             required
           />

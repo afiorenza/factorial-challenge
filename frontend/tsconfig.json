@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "allowImportingTsExtensions": true,
-    "baseUrl": "./src",
     "esModuleInterop": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
@@ -13,7 +12,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": false,
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./src/*"],
+      "@test-utils/*": ["./test-utils/*"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,

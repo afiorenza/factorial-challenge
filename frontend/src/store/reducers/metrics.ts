@@ -23,29 +23,24 @@ export interface IFilter {
 }
 
 export interface Metric { 
-  id?: number;
+  id: number;
   name:  string;
   timestamp: string;
-  value: string;
-}
-
-export interface Average {
-  datetime: string;
   value: number;
 }
 
 export interface Stats {
-  minutes: Average[];
-  hours: Average[];
-  days: Average[];
+  minutes?: number;
+  hours?: number;
+  days?: number;
 }
 
 export interface MetricState {
   adding: boolean;
   error: string;
   loading: boolean;
-  metrics: Metric[] | [];
-  stats: Stats | {};
+  metrics: Metric[];
+  stats: Stats;
 }
 
 const initialState: MetricState = {

@@ -7,11 +7,9 @@ import React, { useState } from 'react';
 import type { Metric } from '@/store/reducers/metrics';
 
 const AddMetric: React.FC = () => {
+  const [isOpen, setOpen]= useState<boolean>(false);
   const { adding } = useAppSelector(state => state.metrics);
   const dispatch = useAppDispatch();
-
-  const [isOpen, setOpen]= useState<boolean>(false);
-
   const setModalOpen = (isOpen: boolean) => setOpen(isOpen);
 
   const handleSubmit = async (metric: Metric) => {
@@ -30,7 +28,8 @@ const AddMetric: React.FC = () => {
 
   const renderModal = () => {
     return (
-      <Dialog 
+      <Dialog
+        data-testid='form-modal'
         handler={ setModalOpen }
         open={ isOpen }
       >

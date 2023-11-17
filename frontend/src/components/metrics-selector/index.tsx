@@ -7,7 +7,6 @@ import React from 'react';
 import type { ControllerFieldState, ControllerRenderProps } from 'react-hook-form';
 
 interface IMetricsSelectorProps {
-  [x: string]: any;
   control: Control<any>;
   label: string;
   name: string;
@@ -27,17 +26,7 @@ const MetricsSelector: React.FC<IMetricsSelectorProps> = ({ control, label, name
       </Option>
     );
   };
-
-  const handleChange = (onChange: Function, value: string) => {
-    onChange({
-      target: {
-        name: name,
-        value
-      }
-    });
-  }
   
-
   const renderSelect = ({ field: { onChange, value, ref }, fieldState: { error } }: { field: ControllerRenderProps, fieldState: ControllerFieldState  }) => {
     return (
       <Select
@@ -52,7 +41,22 @@ const MetricsSelector: React.FC<IMetricsSelectorProps> = ({ control, label, name
     );
   }
 
-  if (isEmpty(metricTypes)) return null;
+  const handleChange = (onChange: Function, value: string) => {
+    onChange({
+      target: {
+        name: name,
+        value
+      }
+    });
+  }
+
+  if (isEmpty(metricTypes)) {
+    return (
+      <Select disabled>
+        <Option>Loading...</Option>
+      </Select>
+    );
+  }
 
   return (
     <Controller

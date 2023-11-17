@@ -1,12 +1,14 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import metricsReducer from '@/store/reducers/metrics';
 import typesReducer from '@/store/reducers/types';
 
+const rootReducer = combineReducers({
+  metrics: metricsReducer,
+  types: typesReducer
+});
+
 const store = configureStore({
-  reducer: {
-    metrics: metricsReducer,
-    types: typesReducer
-  }
+  reducer: rootReducer
 });
 
 export type AppDispatch = typeof store.dispatch;

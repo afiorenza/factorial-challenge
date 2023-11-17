@@ -35,7 +35,11 @@ const Filterbar: React.FC = () => {
   const [errors, setErrors] = useState<IErrors>({});
 
   const handleValidSubmit = (formData: IFilter) => {
-    dispatch(fetchMetrics(formData));
+    dispatch(fetchMetrics({
+      ...formData,
+      from: formatDate(new Date(formData.from)),
+      to: formatDate(new Date(formData.to)),
+    }));
   }
 
   const handleInvalidSubmit = (errors: any) => {

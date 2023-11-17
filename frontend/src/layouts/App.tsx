@@ -9,7 +9,7 @@ import Stats from '@/components/stats';
 import store from '@/store';
 
 const App: React.FC = () => {
-  useEffect(() => {
+    useEffect(() => {
     store.dispatch(fetchTypes());
   }, []);
 
