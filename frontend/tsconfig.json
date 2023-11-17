@@ -13,15 +13,19 @@
     "noUnusedParameters": false,
     "paths": {
       "@/*": ["./src/*"],
-      "@test-utils/*": ["./test-utils/*"]
+      "@test/*": ["./test/*"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
     "target": "ES2020",
-    "types": ["@types/jest", "node",  "vite/client"],
+    "types": ["node",  "vite/client"],
     "useDefineForClassFields": true
   },
+  "exclude": [
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx"
+  ],
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

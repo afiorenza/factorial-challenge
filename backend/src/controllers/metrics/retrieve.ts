@@ -1,5 +1,5 @@
 import { ERRORS } from '@/utils/constants';
-import { InferType, number, object, ValidationError } from 'yup';
+import { InferType, object, ValidationError } from 'yup';
 import { get } from 'lodash';
 import { nameValidation, parseValidationErrors, timestampValidation } from '@/utils/validation';
 import { Prisma } from '@prisma/client';

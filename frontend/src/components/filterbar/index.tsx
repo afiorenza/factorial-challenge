@@ -25,7 +25,7 @@ interface IErrors {
 const Filterbar: React.FC = () => {
   const dispatch = useAppDispatch();
   const isLoadingMetrics = useAppSelector(selectLoadingMetrics);
-  const { control, handleSubmit, register } = useForm<IFilter>({
+  const { handleSubmit, register } = useForm<IFilter>({
     defaultValues: { 
       name: '',
       from: formatDate(subDays(new Date(), 7)),
@@ -55,10 +55,8 @@ const Filterbar: React.FC = () => {
           <div className='flex flex-col lg:flex-row lg:justify-between lg:space-x-4'>
             <div className='mb-4 lg:w-1/4 lg:mb-0'>
               <MetricsSelector
-                control={ control }
-                label='Metric type' 
-                name={ FilterAttributes.name }
-                required
+                data-testid='input-name'
+                formProps={ register(FilterAttributes.name, { required: true }) }
               />
             </div>
             

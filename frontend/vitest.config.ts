@@ -1,9 +1,6 @@
-import 'dotenv/config';
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
-
-const PORT = Number(process.env.PORT);
 
 export default defineConfig({
   plugins: [react()],
@@ -13,7 +10,9 @@ export default defineConfig({
       '@test': path.resolve(__dirname, './test')
     }
   },
-  server: {
-    port: PORT
-  }
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './test/setup.ts'
+  },
 });

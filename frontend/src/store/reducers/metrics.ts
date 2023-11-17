@@ -38,6 +38,7 @@ export interface Stats {
 export interface MetricState {
   adding: boolean;
   error: string;
+  filtered: boolean;
   loading: boolean;
   metrics: Metric[];
   stats: Stats;
@@ -46,6 +47,7 @@ export interface MetricState {
 const initialState: MetricState = {
   adding: false,
   error: '',
+  filtered: false,
   loading: false,
   metrics: [],
   stats: {}
@@ -91,19 +93,22 @@ export const MetricsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchMetrics.pending, (state) => {
       state.error = '';
+      state.filtered = false;
       state.loading = true;
     });
     
     builder.addCase(fetchMetrics.fulfilled, (state, { payload }) => {
       state.error = '';
+      state.filtered = true;
       state.loading = false;
       state.metrics = payload.metrics;
       state.stats = payload.stats;
     });
     
     builder.addCase(fetchMetrics.rejected, (state, { payload }) => {
-      state.loading = false;
       state.error = payload as string;
+      state.filtered = true;
+      state.loading = false;
     });
 
     builder.addCase(addMetric.pending, (state) => {
@@ -133,6 +138,8 @@ export const selectMetrics = (state: RootState) => {
     }
   })
 };
+export const selectMetricsName = (state: RootState) => state.metrics.metrics[0]?.name;
+export const selectFiltered = (state: RootState) => state.metrics.filtered;
 export const selectStats = (state: RootState) => state.metrics.stats;
 
 export default MetricsSlice.reducer;

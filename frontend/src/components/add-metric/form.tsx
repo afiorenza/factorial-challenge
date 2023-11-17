@@ -21,12 +21,12 @@ interface IErrors {
 }
 
 interface IAddMetricForm {
-  adding: boolean;
+  adding?: boolean;
   onSubmit: Function;
 }
 
 const AddMetricForm: React.FC<IAddMetricForm> = ({ adding, onSubmit }) => {
-  const { control, handleSubmit, register, reset } = useForm<Metric>({
+  const { handleSubmit, register, reset } = useForm<Metric>({
     defaultValues: { 
       name: '',
       timestamp: formatDate(new Date()),
@@ -34,7 +34,7 @@ const AddMetricForm: React.FC<IAddMetricForm> = ({ adding, onSubmit }) => {
     }
   });
   const [errors, setErrors] = useState<IErrors>({});
-
+  
   const handleValidSubmit = (formData: Metric) => {
     onSubmit({
       ...formData,
@@ -51,10 +51,12 @@ const AddMetricForm: React.FC<IAddMetricForm> = ({ adding, onSubmit }) => {
     <Card>
       <form 
         className='p-5'
+        data-testid='form'
         onSubmit={ handleSubmit(handleValidSubmit, handleInvalidSubmit) }
       >
         <div className='mb-2'>
           <Datepicker 
+            data-testid='input-timestamp'
             error={ !!errors[MetricAttributes.timestamp] }
             formProps={ register(MetricAttributes.timestamp, { required: true }) }
             label='Date'
@@ -64,10 +66,8 @@ const AddMetricForm: React.FC<IAddMetricForm> = ({ adding, onSubmit }) => {
 
         <div className='mb-4'>
           <MetricsSelector 
-            control={ control }
-            label='Metric type' 
-            name={ MetricAttributes.name }
-            required
+            data-testid='input-name'
+            formProps={ register(MetricAttributes.name, { required: true }) }
           />
         </div>
         
@@ -75,6 +75,7 @@ const AddMetricForm: React.FC<IAddMetricForm> = ({ adding, onSubmit }) => {
           <Input
             { ...register(MetricAttributes.value, { required: true }) } 
             crossOrigin={ undefined }
+            data-testid='input-value'
             error={ !isEmpty(errors[MetricAttributes.value]) }
             label='Value'
             step={ 0.01 }
@@ -85,7 +86,8 @@ const AddMetricForm: React.FC<IAddMetricForm> = ({ adding, onSubmit }) => {
 
         <div className='flex justify-end mx-4'>
           <Button 
-            disabled={ adding } 
+            data-testid='button-submit'
+            disabled={ adding }
             type='submit'
           >
             Submit
