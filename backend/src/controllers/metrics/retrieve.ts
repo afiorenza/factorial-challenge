@@ -1,14 +1,10 @@
 import { ERRORS } from '@/utils/constants';
 import { InferType, number, object, ValidationError } from 'yup';
+import { get } from 'lodash';
 import { nameValidation, parseValidationErrors, timestampValidation } from '@/utils/validation';
 import { Prisma } from '@prisma/client';
 import { Request, Response } from 'express';
 import database from '@/database/index';
-
-interface IAverage {
-  datetime: string;
-  value: number;
-}
 
 const filterSchema = object({
   from: timestampValidation.required(),
@@ -17,6 +13,22 @@ const filterSchema = object({
 });
 
 type Filter = InferType<typeof filterSchema>;
+
+const getAverage = async ({ daterange, filter }: { daterange: string, filter: Filter }) => {
+  const query = (await database.$queryRaw(
+    Prisma.sql`
+      SELECT AVG(value) as average
+      FROM (
+        SELECT strftime(${daterange}, timestamp) as datetime, avg(value) as value, name
+        FROM Metrics 
+        WHERE name = ${filter.name} AND timestamp >= ${filter.from} AND timestamp <= ${filter.to} 
+        GROUP BY datetime
+      );
+    `
+  ));
+
+  return get(query, '[0].average');
+}
 
 export default async (req: Request, res: Response): Promise<Response> => {
   let filter: Filter;
@@ -46,27 +58,11 @@ export default async (req: Request, res: Response): Promise<Response> => {
         timestamp: 'asc'
       }
     });
-
-    // const average = await database.metrics.aggregate({
-    //   select: {
-    //     [`strftime('%Y-%m-%d %H:%M', timestamp)`:] 'datetime'
-    //   },
-    //   _avg: {
-    //     value: true
-    //   },
-    //   where
-    // });
-
-    const averageByMinutes = (await database.$queryRaw(
-      Prisma.sql`SELECT strftime('%Y-%m-%d %H:%M', timestamp) as datetime, avg(value) as value FROM Metrics GROUP BY datetime;` // GROUP BY minutes ORDER BY minutes DESC
-    )) as Array<IAverage>;
-    const averageByHours = (await database.$queryRaw(
-      Prisma.sql`SELECT strftime('%Y-%m-%d %H', timestamp) as datetime, avg(value) as value FROM Metrics GROUP BY datetime;` // GROUP BY hours ORDER BY hours DESC
-    )) as Array<IAverage>;
-    const averageByDays = (await database.$queryRaw(
-      Prisma.sql`SELECT strftime('%Y-%m-%d', timestamp) as datetime, avg(value) as value FROM Metrics GROUP BY datetime;` // GROUP BY days ORDER BY days DESC
-    )) as Array<IAverage>;
-
+ 
+    const averageByMinutes = await getAverage({ daterange: '%Y-%m-%d %H:%M', filter });
+    const averageByHours = await getAverage({ daterange: '%Y-%m-%d %H', filter });
+    const averageByDays = await getAverage({ daterange: '%Y-%m-%d', filter });
+    
     return res.json({
       data: {
         stats: {
