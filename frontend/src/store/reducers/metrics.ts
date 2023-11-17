@@ -125,7 +125,14 @@ export const MetricsSlice = createSlice({
 
 export const selectAddingMetrics = (state: RootState) => state.metrics.adding;
 export const selectLoadingMetrics = (state: RootState) => state.metrics.loading;
-export const selectMetrics = (state: RootState) => state.metrics.metrics;
+export const selectMetrics = (state: RootState) => {
+  return state.metrics.metrics.map(({ timestamp, value }) => {
+    return {
+      x: new Date(timestamp).getTime(),
+      y: value
+    }
+  })
+};
 export const selectStats = (state: RootState) => state.metrics.stats;
 
 export default MetricsSlice.reducer;

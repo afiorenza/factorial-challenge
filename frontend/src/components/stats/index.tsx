@@ -20,7 +20,7 @@ const Stats: React.FC = () => {
   if (every(stats, isNull)) return null;
 
   return (
-    <Card className='text-black'>
+    <Card className='text-black h-full'>
       <CardBody>
         <Typography className='font-bold'>Average per</Typography>
 
