@@ -15,7 +15,6 @@
 
 Inside each component you will find instructions to run standalone.
 
-
 ### Project structure and boilerplate
 
 The following document is intended to explain the use of different technologies and libraries for the development of the project. To better structure the text, I am going to separate the document into the three layers of the project which are frontend, backend and database and then the use of docker.
@@ -45,3 +44,25 @@ I chose SQLite since it is a serverless database, which does not require any com
 **Docker**
 
 I chose Docker for two reasons, the first is that using it in conjunction with docker-compose it is extremely easy to run the project for any user/developer who has docker installed on their computer. And second, to leave both projects dockerized and be able to use any tool such as K8s, Heroku or Digital Ocean Apps to be able to deploy easily.
+
+### Requirements
+
+The initial requirements sent by Roger were the following 
+
+> We need a Frontend + Backend application that allows you to post and visualize metrics. Each metric will have: Timestamp, name, and value. The metrics will be shown in a timeline and must show averages per minute/hour/day The metrics will be persisted in the database.
+
+What I understood from reading the requirements is that the application should be able to allow the user to:
+
+* Add metrics with the fields timestamp, name or type that is used to classify the metric and the value of the metric. I chose humidity and temperature to give some examples.
+
+* Filter by type and date.
+
+* Display a timeseries chart with the results and averages per minute, hour and day.
+
+On a technical level:
+
+* The application had to persist the data in a database, I chose a relational database since it is the standard used in factorial.
+
+* The frontend had to be developed in React.
+
+* I was free to choose the programming language to write the backend.
